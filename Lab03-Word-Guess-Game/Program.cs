@@ -15,10 +15,14 @@ namespace Lab03_Word_Guess_Game
         {
             string path = "../../../WordBank.txt";
 
-            using (StreamWriter sw = new StreamWriter(path))
+            if (!File.Exists((path)))
             {
-                sw.Write("This is my Word Bank");
+                using (StreamWriter sw = new StreamWriter(path))
+                    {
+                        sw.Write("This is my Word Bank");
+                    }
             }
+
         }
       
     }

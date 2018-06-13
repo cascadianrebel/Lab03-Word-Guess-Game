@@ -8,7 +8,6 @@ namespace Lab03_Word_Guess_Game
     class Program
     {
         public static string path = "../../../WordBank.txt";
-        //source for initial word bank
 
         public static string[] initialBank = new string[] { "apple", "banana", "orange", "lemon", "cucumber", "blueberry", "grapes", "plum" };
 
@@ -40,22 +39,22 @@ namespace Lab03_Word_Guess_Game
             {
                 switch (Convert.ToInt32(Console.ReadLine()))
                 {
-                        case 1:
-                            StartGame();
-                            break;
-                        case 2:
-                            Console.Clear();
-                            OptionsMenu();
-                            break;
-                        case 3:
-                            Console.WriteLine("So long friend :( ");
-                            Environment.Exit(0);
-                            break;
-                        default:
-                            Console.Clear();
-                            Console.WriteLine("Please make valid selection");
-                            DisplayHome();
-                            break;
+                    case 1:
+                        StartGame();
+                        break;
+                    case 2:
+                        Console.Clear();
+                        OptionsMenu();
+                        break;
+                    case 3:
+                        Console.WriteLine("So long friend :( ");
+                        Environment.Exit(0);
+                        break;
+                    default:
+                        Console.Clear();
+                        Console.WriteLine("Please make valid selection");
+                        DisplayHome();
+                        break;
                 }
             }
             catch (FormatException)
@@ -63,7 +62,7 @@ namespace Lab03_Word_Guess_Game
                 Console.Clear();
                 Console.WriteLine("**Please only enter numbers 1-3**");
                 DisplayHome();
-                throw ;
+                throw;
             }
 
         }
@@ -95,12 +94,15 @@ namespace Lab03_Word_Guess_Game
                 switch (Convert.ToInt32(Console.ReadLine()))
                 {
                     case 1:
-                        ReadWordBank();
+                        DisplayWordBank();
+                        OptionsMenu();
                         break;
                     case 2:
+                        DisplayWordBank();
                         AddToWordBank();
                         break;
                     case 3:
+                        DisplayWordBank();
                         RemoveFromWordBank();
                         break;
                     case 4:
@@ -129,7 +131,7 @@ namespace Lab03_Word_Guess_Game
         static void CreateWordBank(string[] words)
         {
             // checks if the file already exists
-            if (!File.Exists((path)))
+            if (!File.Exists(path))
             {
                 //creates the file if it doesn't already exist
                 using (StreamWriter sw = new StreamWriter(path))
@@ -146,46 +148,56 @@ namespace Lab03_Word_Guess_Game
                         sw.Close();
                     }
             }
+            else
+            {
+                DeleteFile(path);
+                CreateWordBank(words);
+            }
+
         }
-        
+
         /// <summary>
         /// accesses the content of the WordBank file
         /// </summary>
-        static void ReadWordBank()
+        static void DisplayWordBank()
         {
             Console.Clear();
             //displays each element in the word bank
             try
-                {
+            {
                 string[] WordBank = File.ReadAllLines(path);
+
                 //iterates through array of words created from each line of the Word Bank
-                    foreach (string value in WordBank)
-                    {
-                        Console.WriteLine(value);
-                    }
-                }
-            catch (Exception)
+                foreach (string value in WordBank)
                 {
-                    Console.WriteLine("Something went wrong");
+                    Console.WriteLine(value);
                 }
-            OptionsMenu();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Something went wrong");
+                Console.WriteLine(e);
+            }
+
         }
-        
+
         /// <summary>
         /// allows user to update Word bank
         /// </summary>
         static void AddToWordBank()
         {
             Console.Clear();
-            Console.WriteLine("Please type the word you'd like to add to the Word Bank then press enter twice");
+            DisplayWordBank();
 
             using (StreamWriter sw = File.AppendText(path))
             {
                 //adds word to text file
-                sw.WriteLine(Console.ReadLine());
-                Console.WriteLine($"{Console.ReadLine()} added to WordBank");
+                Console.WriteLine("Please type the word you'd like to add to the Word Bank then press enter ");
+                string Word2Add = Console.ReadLine();
+                sw.WriteLine(Word2Add);;
             }
-
+            Console.Clear();
+            DisplayWordBank();
             OptionsMenu();
         }
 
@@ -194,31 +206,41 @@ namespace Lab03_Word_Guess_Game
         /// </summary>
         static void RemoveFromWordBank()
         {
-            Console.Clear();
-            Console.WriteLine("Please type the word you'd like to remove from the Word Bank then press enter twice");
-            
+            string[] WordBank = File.ReadAllLines(path);
 
-            using (StreamWriter sw = File.AppendText(path))
+            string[] UpdateWordBank = new string[WordBank.Length-1];
+
+            int counter = 0;
+
+            Console.WriteLine("Please enter the word you'd like removed from the WordBank");
+            string Word2Remove = Console.ReadLine();
+
+            for (int k = 0; k < WordBank.Length; k++)
             {
-                DeleteFile();
+                if (WordBank[k] != Word2Remove)
+                {
+                    UpdateWordBank[counter] = WordBank[k];
+                Console.WriteLine($"Counter is {counter}. K is {k}. Updated Bank is '{UpdateWordBank[counter]}' with a length of {UpdateWordBank.Length}. Word bank is {WordBank[k]}");
+                    counter++;
+                }
+                else
+                {
+                    Console.WriteLine("else hit");
+                }
 
-
-                //adds word to text file
-                sw.WriteLine(Console.ReadLine());
-                Console.WriteLine($"{Console.ReadLine()} added to WordBank");
             }
 
+            CreateWordBank(UpdateWordBank);
+            DisplayWordBank();
             OptionsMenu();
         }
 
         /// <summary>
         /// deletes the file
         /// </summary>
-        static void DeleteFile()
+        static void DeleteFile(string FilePath)
         {
-            File.Delete(path);
+            File.Delete(FilePath);
         }
-
-      
     }
 }

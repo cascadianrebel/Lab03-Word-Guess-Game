@@ -115,17 +115,21 @@ namespace Lab03_Word_Guess_Game
             string letterGuessed = userGuess.ToString();
             guessedLetters[counter] = letterGuessed;
 
-            foreach (var i in Word)
+            if (Word.Contains(letterGuessed))
             {
-                if (Word.Contains(letterGuessed))
-                {
-                    letterTiles[i] = letterGuessed;
+                for (var i = 0; i < Word.Length; i++)
+                {   
+                    if (Word[i] == Convert.ToChar(letterGuessed))
+                    {
+                        letterTiles[i] = letterGuessed;
+                    }
+                    else             
+                    {
+                        letterTiles[i] = blank;
+                    }
+                Console.Write($"{letterTiles[i]} ");
                 }
-                else
-                {
-                    letterTiles[i] = blank;
-                }
-                Console.Write(letterTiles[i]);
+            
             }
             
             return GamePlay(Word);

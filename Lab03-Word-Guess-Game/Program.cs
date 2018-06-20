@@ -68,11 +68,67 @@ namespace Lab03_Word_Guess_Game
         }
 
 
-        public static string StartGame()
+        public static void StartGame()
         {
-            Console.WriteLine("Choose a letter");
-            string answer = Console.ReadLine();
-            return answer;
+            SelectWord();
+        }
+
+        static string SelectWord()
+        {
+            //create the wordBank by reading each line in the wordBank text file
+            string[] wordBank = File.ReadAllLines(path);
+
+            //select a random index position from the wordBank array
+            Random rand = new Random();
+            int randomWordIndex = rand.Next(wordBank.Length);
+
+            //get the word using the random index 
+            string randomWord = wordBank[randomWordIndex];
+
+            GamePlay(randomWord);
+
+            return randomWord;
+        }
+
+        static string GamePlay(string Word)
+        {
+            //create the blank array using the length of the random word
+            string[] letterTiles = new string[Word.Length];
+
+            string[] guessedLetters = new string[26];
+
+            int counter = 0;
+
+            string blank = "_";
+
+            Console.WriteLine("To Guess the word below, type the letter you've chosen, then press enter");
+
+
+            //loop through the word and replace each letter with an underscore
+            foreach (var i in letterTiles)
+            {
+                Console.Write(blank);
+                Console.Write(" ");
+            }
+
+            string userGuess = Console.ReadLine();
+            string letterGuessed = userGuess.ToString();
+            guessedLetters[counter] = letterGuessed;
+
+            foreach (var i in Word)
+            {
+                if (Word.Contains(letterGuessed))
+                {
+                    letterTiles[i] = letterGuessed;
+                }
+                else
+                {
+                    letterTiles[i] = blank;
+                }
+                Console.Write(letterTiles[i]);
+            }
+            
+            return GamePlay(Word);
         }
 
         /// <summary>
@@ -165,10 +221,10 @@ namespace Lab03_Word_Guess_Game
             //displays each element in the word bank
             try
             {
-                string[] WordBank = File.ReadAllLines(path);
+                string[] wordBank = File.ReadAllLines(path);
 
                 //iterates through array of words created from each line of the Word Bank
-                foreach (string value in WordBank)
+                foreach (string value in wordBank)
                 {
                     Console.WriteLine(value);
                 }
@@ -206,21 +262,21 @@ namespace Lab03_Word_Guess_Game
         /// </summary>
         static void RemoveFromWordBank()
         {
-            string[] WordBank = File.ReadAllLines(path);
+            string[] wordBank = File.ReadAllLines(path);
 
-            string[] UpdateWordBank = new string[WordBank.Length-1];
+            string[] updateWordBank = new string[wordBank.Length-1];
 
             int counter = 0;
 
-            Console.WriteLine("Please enter the word you'd like removed from the WordBank");
+            Console.WriteLine("Please enter the word you'd like removed from the wordBank");
             string Word2Remove = Console.ReadLine();
 
-            for (int k = 0; k < WordBank.Length; k++)
+            for (int k = 0; k < wordBank.Length; k++)
             {
-                if (WordBank[k] != Word2Remove)
+                if (wordBank[k] != Word2Remove)
                 {
-                    UpdateWordBank[counter] = WordBank[k];
-                Console.WriteLine($"Counter is {counter}. K is {k}. Updated Bank is '{UpdateWordBank[counter]}' with a length of {UpdateWordBank.Length}. Word bank is {WordBank[k]}");
+                    updateWordBank[counter] = wordBank[k];
+                Console.WriteLine($"Counter is {counter}. K is {k}. Updated Bank is '{updateWordBank[counter]}' with a length of {updateWordBank.Length}. Word bank is {wordBank[k]}");
                     counter++;
                 }
                 else
@@ -230,7 +286,7 @@ namespace Lab03_Word_Guess_Game
 
             }
 
-            CreateWordBank(UpdateWordBank);
+            CreateWordBank(updateWordBank);
             DisplayWordBank();
             OptionsMenu();
         }

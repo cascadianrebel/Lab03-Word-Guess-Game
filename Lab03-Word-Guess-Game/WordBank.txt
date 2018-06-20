@@ -1,9 +1,8 @@
-NewWord
-NewWord
-NewWord
-NewWord
-Fizzbuzz
-bartender
-Juice
-pillow
-peach
+apple
+banana
+orange
+lemon
+cucumber
+blueberry
+grapes
+plum

@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Lab03_Word_Guess_Game
 {
-    class Program
+    public class Program
     {
         public static string path = "../../../WordBank.txt";
 
@@ -90,7 +90,7 @@ namespace Lab03_Word_Guess_Game
             return randomWord;
         }
 
-        static string GamePlay(string Word)
+        static void GamePlay(string Word)
         {
             //create the blank array using the length of the random word
             string[] letterTiles = new string[Word.Length];
@@ -101,43 +101,64 @@ namespace Lab03_Word_Guess_Game
 
             string blank = "_";
 
-            Console.WriteLine("To Guess the word below, type the letter you've chosen, then press enter");
-
-
+            Console.WriteLine("Guess the word below");
             //loop through the word and replace each letter with an underscore
-            foreach (var i in letterTiles)
+            for (var i = 0; i < letterTiles.Length; i++)
             {
-                Console.Write(blank);
-                Console.Write(" ");
+                letterTiles[i] = blank;
+                Console.Write($"{letterTiles[i]}  ");
             }
 
-            string userGuess = Console.ReadLine();
-            string letterGuessed = userGuess.ToString();
-            guessedLetters[counter] = letterGuessed;
 
-            if (Word.Contains(letterGuessed))
+
+
+            while (letterTiles.Contains("_") && counter < 10)
             {
-                for (var i = 0; i < Word.Length; i++)
-                {   
-                    if (Word[i] == Convert.ToChar(letterGuessed))
+
+                Console.WriteLine("Type a letter to guess, then press enter");
+                string letterGuessed = Console.ReadLine();
+                guessedLetters[counter] = letterGuessed;
+                counter++;
+
+                if (Word.Contains(letterGuessed))
+                {
+                    for (var i = 0; i < Word.Length; i++)
                     {
-                        letterTiles[i] = letterGuessed;
+                        if (Word[i] == Convert.ToChar(letterGuessed))
+                        {
+                            letterTiles[i] = letterGuessed;
+                            
+                        }
+                        else
+                        {
+                            letterTiles[i] = blank;
+                        }
+                        Console.Write($"{letterTiles[i]} ");
                     }
-                    else             
-                    {
-                        letterTiles[i] = blank;
-                    }
-                Console.Write($"{letterTiles[i]} ");
+
                 }
-            
+                else
+                {
+
+                    for (var i = 0; i < guessedLetters.Length; i++)
+                    {
+                        while (guessedLetters[i] != null)
+                        {
+                            Console.Write($"Guessed Letters: {guessedLetters[i]}");
+                        }
+                    }
+
+                }
             }
-            
-            return GamePlay(Word);
+            Console.WriteLine("You Win! Press Q to quit or any other key to return to main menu");
+            if (Console.ReadLine() == "Q")
+            {
+                Environment.Exit(0);
+            }
+            DisplayHome();
         }
 
-        /// <summary>
-        /// shows user View, Add, and Delete display screen
-        /// </summary>
+        
         static void OptionsMenu()
         {
             Console.WriteLine("________________________");
@@ -188,7 +209,7 @@ namespace Lab03_Word_Guess_Game
         /// <summary>
         /// creates the file called WordBank.txt
         /// </summary>
-        static void CreateWordBank(string[] words)
+        public static void CreateWordBank(string[] words)
         {
             // checks if the file already exists
             if (!File.Exists(path))
@@ -219,7 +240,7 @@ namespace Lab03_Word_Guess_Game
         /// <summary>
         /// accesses the content of the WordBank file
         /// </summary>
-        static void DisplayWordBank()
+        public static void DisplayWordBank()
         {
             Console.Clear();
             //displays each element in the word bank
@@ -262,9 +283,9 @@ namespace Lab03_Word_Guess_Game
         }
 
         /// <summary>
-        /// INCOMPLETE: removing word from word bank
+        /// removing word from word bank
         /// </summary>
-        static void RemoveFromWordBank()
+        public static void RemoveFromWordBank()
         {
             string[] wordBank = File.ReadAllLines(path);
 
@@ -298,7 +319,7 @@ namespace Lab03_Word_Guess_Game
         /// <summary>
         /// deletes the file
         /// </summary>
-        static void DeleteFile(string FilePath)
+        public static void DeleteFile(string FilePath)
         {
             File.Delete(FilePath);
         }
